@@ -1,0 +1,19 @@
+workflows:
+  android-build:
+    name: Android APK Build From Zip
+    max_build_duration: 30
+    instance_type: mac_mini_m1
+    scripts:
+      - name: Unzip project files
+        script: |
+          unzip калькулятор-палива.zip -d extracted_project
+      - name: Build APK
+        script: |
+          GRADLEW_PATH=$(find extracted_project -name gradlew)
+          PROJECT_ROOT=$(dirname "$GRADLEW_PATH")
+          cd "$PROJECT_ROOT"
+          chmod +x gradlew
+          ./gradlew assembleDebug
+    artifacts:
+      - extracted_project/**/build/outputs/apk/debug/*.apk
+      
